@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>HTTiket — Boutique</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f6f6f8;
+      color: #222;
+    }
+
+    /* HEADER */
+
+    header {
+      background: #3B1464;
+      color: white;
+      padding: 18px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 29px;
+      font-weight: 800;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .cart {
+      background: #F58220;
+      padding: 10px 16px;
+      border-radius: 7px;
+    }
+
+    /* HERO */
+
+    .hero {
+      background: #3B1464;
+      color: white;
+      padding: 65px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 45px;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    /* BOUTIQUE */
+
+    .shop {
+      max-width: 1150px;
+      margin: auto;
+      padding: 55px 20px;
+    }
+
+    .section-title {
+      color: #3B1464;
+      font-size: 30px;
+      margin-bottom: 30px;
+    }
+
+    /* PRODUCTS */
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      transition: 0.2s;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-image {
+      height: 300px;
+      background: linear-gradient(
+        135deg,
+        #3B1464,
+        #7040a0
+      );
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: white;
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .product-content {
+      padding: 20px;
+    }
+
+    .product h3 {
+      color: #3B1464;
+      font-size: 21px;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      color: #F58220;
+      font-size: 19px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .buy-btn {
+      display: block;
+      width: 100%;
+      background: #F58220;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border-radius: 7px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: #3B1464;
+      color: white;
+      text-align: center;
+      padding: 35px 20px;
+      margin-top: 40px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 750px) {
+
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .hero h1 {
+        font-size: 35px;
+      }
+
+      .products {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+
+  <!-- HEADER -->
+
+  <header>
+
+    <div class="logo">
+      HTTiket
+    </div>
+
+    <nav>
+
+      <a href="/">
+        Accueil
+      </a>
+
+      <a href="/event">
+        Événement
+      </a>
+
+      <a href="/shop" class="cart">
+        Boutique
+      </a>
+
+    </nav>
+
+  </header>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <h1>
+      Boutique HTTiket
+    </h1>
+
+    <p>
+      Découvrez nos produits officiels et affichez vos couleurs.
+    </p>
+
+  </section>
+
+
+  <!-- PRODUCTS -->
+
+  <section class="shop">
+
+    <h2 class="section-title">
+      Produits disponibles
+    </h2>
+
+
+    <div class="products">
+
+
+      <!-- MAYO -->
+
+      <div class="product">
+
+        <div class="product-image">
+          MAYO HTTIKET
+        </div>
+
+        <div class="product-content">
+
+          <h3>
+            Mayo HTTiket
+          </h3>
+
+          <div class="price">
+            1 500 HTG
+          </div>
+
+          <a href="#" class="buy-btn">
+            Acheter
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- KEPI -->
+
+      <div class="product">
+
+        <div class="product-image">
+          KEPI HTTIKET
+        </div>
+
+        <div class="product-content">
+
+          <h3>
+            Kepi HTTiket
+          </h3>
+
+          <div class="price">
+            1 000 HTG
+          </div>
+
+          <a href="#" class="buy-btn">
+            Acheter
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- HOODIE -->
+
+      <div class="product">
+
+        <div class="product-image">
+          HOODIE HTTIKET
+        </div>
+
+        <div class="product-content">
+
+          <h3>
+            Hoodie HTTiket
+          </h3>
+
+          <div class="price">
+            2 500 HTG
+          </div>
+
+          <a href="#" class="buy-btn">
+            Acheter
+          </a>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <p>
+      © 2026 Dabenson Sainvilus — Tous droits réservés.
+    </p>
+
+    <p>
+      Boutique officielle HTTiket
+    </p>
+
+  </footer>
+
+
+</body>
+
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTiket - Événement</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #3B1464;
+      color: white;
+      padding: 18px 30px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .event {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .event-image {
+      width: 100%;
+      height: 380px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 25px;
+      background: #3B1464;
+    }
+
+    .event-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .event h1 {
+      font-size: 35px;
+      margin-bottom: 20px;
+      color: #3B1464;
+    }
+
+    .info {
+      margin-bottom: 25px;
+      line-height: 1.9;
+      color: #555;
+    }
+
+    .description {
+      margin-bottom: 25px;
+      line-height: 1.7;
+    }
+
+    .description h2 {
+      color: #3B1464;
+      margin-bottom: 10px;
+    }
+
+    .ticket-box {
+      border-top: 1px solid #ddd;
+      padding-top: 25px;
+    }
+
+    .price {
+      font-size: 25px;
+      font-weight: bold;
+      color: #3B1464;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #F58220;
+      color: white;
+      padding: 14px 25px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back {
+      display: block;
+      margin-top: 25px;
+      color: #3B1464;
+      text-decoration: none;
+    }
+
+    .not-found {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .not-found h1 {
+      color: #3B1464;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 600px) {
+
+      .event {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .event-image {
+        height: 250px;
+      }
+
+      .event h1 {
+        font-size: 28px;
+      }
+
+      .price {
+        font-size: 22px;
+      }
+
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">HTTiket</div>
+  </header>
+
+  <section class="event" id="eventContainer">
+
+```
+<!-- Le contenu de l'événement sera chargé automatiquement ici -->
+```
+
+  </section>
+
+  <script>
+
+    /* =========================
+       RÉCUPÉRER L'ID
+    ========================= */
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const eventId =
+      params.get("id");
+
+
+    /* =========================
+       ÉVÉNEMENTS DÉMO
+    ========================= */
+
+    const demoEvents = [
+
+      {
+        id: "demo1",
+        nom: "Vamos a la piscina HTTiket",
+        date: "2026-10-24",
+        heure: "19h00",
+        lieu: "Domond peligre, Haïti",
+        prix: 1500,
+        quantite: 100,
+        categorie: "Fêtes",
+        description: "Un événement spécial HTTiket. Venez profiter d'une belle soirée dans une ambiance conviviale et festive.",
+        image: "images/cart1.png"
+      },
+
+
+      {
+        id: "demo2",
+        nom: "Événement musical",
+        date: "",
+        heure: "À confirmer",
+        lieu: "Haïti",
+        prix: 0,
+        quantite: 0,
+        categorie: "Musique",
+        description: "Les informations concernant cet événement musical seront disponibles prochainement.",
+        image: "images/cart2.jpg"
+      },
+
+
+      {
+        id: "demo3",
+        nom: "Winter Fest",
+        date: "",
+        heure: "À confirmer",
+        lieu: "Lascahobas, Haïti",
+        prix: 0,
+        quantite: 0,
+        categorie: "Fêtes",
+        description: "Les informations concernant le Winter Fest seront disponibles prochainement.",
+        image: "images/cart3.png"
+      }
+
+    ];
+
+
+    /* =========================
+       RÉCUPÉRER LES ÉVÉNEMENTS CRÉÉS
+    ========================= */
+
+    const savedEvents =
+      JSON.parse(
+        localStorage.getItem(
+          "httiketEvents"
+        )
+      ) || [];
+
+
+    /* =========================
+       CHERCHER L'ÉVÉNEMENT
+    ========================= */
+
+    const selectedEvent =
+      savedEvents.find(
+        function(event) {
+
+          return String(event.id) ===
+                 String(eventId);
+
+        }
+      ) ||
+
+      demoEvents.find(
+        function(event) {
+
+          return String(event.id) ===
+                 String(eventId);
+
+        }
+      );
+
+
+    const container =
+      document.getElementById(
+        "eventContainer"
+      );
+
+
+    /* =========================
+       SÉCURITÉ HTML
+    ========================= */
+
+    function escapeHTML(text) {
+
+      return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =========================
+       FORMAT DATE
+    ========================= */
+
+    function formatDate(dateString) {
+
+      if (!dateString) {
+        return "À VENIR";
+      }
+
+      const date =
+        new Date(
+          dateString + "T00:00:00"
+        );
+
+
+      if (isNaN(date.getTime())) {
+        return dateString;
+      }
+
+
+      return date.toLocaleDateString(
+        "fr-FR",
+        {
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+    }
+
+
+    /* =========================
+       AFFICHER L'ÉVÉNEMENT
+    ========================= */
+
+    if (selectedEvent) {
+
+      document.title =
+        "HTTiket - " +
+        selectedEvent.nom;
+
+
+      container.innerHTML = `
+
+        <div class="event-image">
+
+          <img
+            src="${selectedEvent.image}"
+            alt="${escapeHTML(selectedEvent.nom)}"
+          >
+
+        </div>
+
+
+        <h1>
+          ${escapeHTML(selectedEvent.nom)}
+        </h1>
+
+
+        <div class="info">
+
+          <p>
+            <strong>Date :</strong>
+            ${formatDate(selectedEvent.date)}
+          </p>
+
+          <p>
+            <strong>Heure :</strong>
+            ${escapeHTML(selectedEvent.heure)}
+          </p>
+
+          <p>
+            <strong>Lieu :</strong>
+            ${escapeHTML(selectedEvent.lieu)}
+          </p>
+
+          <p>
+            <strong>Catégorie :</strong>
+            ${escapeHTML(selectedEvent.categorie)}
+          </p>
+
+          <p>
+            <strong>Billets disponibles :</strong>
+            ${Number(selectedEvent.quantite).toLocaleString("fr-FR")}
+          </p>
+
+        </div>
+
+
+        <div class="description">
+
+          <h2>
+            Description
+          </h2>
+
+          <p>
+            ${escapeHTML(selectedEvent.description)}
+          </p>
+
+        </div>
+
+
+        <div class="ticket-box">
+
+          <div class="price">
+
+            Prix :
+            ${Number(selectedEvent.prix).toLocaleString("fr-FR")}
+            HTG
+
+          </div>
+
+
+          <a
+            href="/buy?id=${encodeURIComponent(selectedEvent.id)}"
+            class="btn"
+          >
+            Acheter mon billet
+          </a>
+
+        </div>
+
+
+        <a
+          href="/"
+          class="back"
+        >
+          ← Retour à l'accueil
+        </a>
+
+      `;
+
+    } else {
+
+      container.innerHTML = `
+
+        <div class="not-found">
+
+          <h1>
+            Événement introuvable
+          </h1>
+
+          <p>
+            Cet événement n'existe pas ou n'est plus disponible.
+          </p>
+
+          <a
+            href="/"
+            class="back"
+          >
+            ← Retour à l'accueil
+          </a>
+
+        </div>
+
+      `;
+
+    }
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTiket - Acheter un billet</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #222;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      text-align: center;
+      color: #3B1464;
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .event-info {
+      background: #f5f0fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    .event-info p {
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 18px;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #3B1464;
+    }
+
+    .available {
+      margin-top: 15px;
+      padding: 12px;
+      background: #f5f0fa;
+      border-radius: 8px;
+      color: #3B1464;
+      font-weight: bold;
+    }
+
+    .total {
+      margin-top: 25px;
+      padding: 18px;
+      background: #3B1464;
+      color: white;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #F58220;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .message {
+      display: none;
+      margin-top: 20px;
+      padding: 18px;
+      background: #f5f0fa;
+      border-radius: 10px;
+      color: #3B1464;
+      line-height: 1.6;
+    }
+
+    .error {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #ffeaea;
+      border-radius: 10px;
+      color: #b00020;
+      line-height: 1.5;
+      font-weight: bold;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #3B1464;
+      text-decoration: none;
+    }
+
+    .not-found {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .not-found h1 {
+      color: #3B1464;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        margin: 15px auto;
+        padding: 20px;
+      }
+
+      .logo {
+        font-size: 27px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+```
+<div class="logo">HTTiket</div>
+
+<h1>Acheter mon billet</h1>
+
+<div id="pageContent">
+
+  <!-- Les informations de l'événement seront chargées automatiquement -->
+
+</div>
+```
+
+  </div>
+
+  <script>
+
+    /* =========================
+       RÉCUPÉRER L'ID
+    ========================= */
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const eventId =
+      params.get("id");
+
+
+    /* =========================
+       ÉVÉNEMENTS DÉMO
+    ========================= */
+
+    const demoEvents = [
+
+      {
+        id: "demo1",
+        nom: "Vamos a la piscina HTTiket",
+        date: "2026-10-24",
+        heure: "19h00",
+        lieu: "Domond peligre, Haïti",
+        prix: 1500,
+        quantite: 100,
+        categorie: "Fêtes",
+        description: "Un événement spécial HTTiket. Venez profiter d'une belle soirée dans une ambiance conviviale et festive.",
+        image: "images/cart1.png"
+      },
+
+      {
+        id: "demo2",
+        nom: "Événement musical",
+        date: "",
+        heure: "À confirmer",
+        lieu: "Haïti",
+        prix: 0,
+        quantite: 0,
+        categorie: "Musique",
+        description: "Les informations concernant cet événement musical seront disponibles prochainement.",
+        image: "images/cart2.jpg"
+      },
+
+      {
+        id: "demo3",
+        nom: "Winter Fest",
+        date: "",
+        heure: "À confirmer",
+        lieu: "Lascahobas, Haïti",
+        prix: 0,
+        quantite: 0,
+        categorie: "Fêtes",
+        description: "Les informations concernant le Winter Fest seront disponibles prochainement.",
+        image: "images/cart3.png"
+      }
+
+    ];
+
+
+    /* =========================
+       RÉCUPÉRER LES ÉVÉNEMENTS CRÉÉS
+    ========================= */
+
+    const savedEvents =
+      JSON.parse(
+        localStorage.getItem(
+          "httiketEvents"
+        )
+      ) || [];
+
+
+    /* =========================
+       CHERCHER L'ÉVÉNEMENT
+    ========================= */
+
+    const selectedEvent =
+      savedEvents.find(
+        function(event) {
+
+          return String(event.id) ===
+                 String(eventId);
+
+        }
+      ) ||
+
+      demoEvents.find(
+        function(event) {
+
+          return String(event.id) ===
+                 String(eventId);
+
+        }
+      );
+
+
+    const pageContent =
+      document.getElementById(
+        "pageContent"
+      );
+
+
+    /* =========================
+       SÉCURITÉ HTML
+    ========================= */
+
+    function escapeHTML(text) {
+
+      return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =========================
+       FORMAT DATE
+    ========================= */
+
+    function formatDate(dateString) {
+
+      if (!dateString) {
+        return "À VENIR";
+      }
+
+      const date =
+        new Date(
+          dateString + "T00:00:00"
+        );
+
+
+      if (isNaN(date.getTime())) {
+        return dateString;
+      }
+
+
+      return date.toLocaleDateString(
+        "fr-FR",
+        {
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+    }
+
+
+    /* =========================
+       AFFICHER L'ÉVÉNEMENT
+    ========================= */
+
+    if (!selectedEvent) {
+
+      pageContent.innerHTML = `
+
+        <div class="not-found">
+
+          <h1>
+            Événement introuvable
+          </h1>
+
+          <p>
+            Cet événement n'existe pas ou n'est plus disponible.
+          </p>
+
+          <a
+            href="/"
+            class="back"
+          >
+            ← Retour à l'accueil
+          </a>
+
+        </div>
+
+      `;
+
+    } else {
+
+      document.title =
+        "HTTiket - Acheter - " +
+        selectedEvent.nom;
+
+
+      const prixBillet =
+        Number(selectedEvent.prix) || 0;
+
+
+      const billetsDisponibles =
+        Number(selectedEvent.quantite) || 0;
+
+
+      pageContent.innerHTML = `
+
+        <div class="event-info">
+
+          <p>
+            <strong>Événement :</strong>
+            ${escapeHTML(selectedEvent.nom)}
+          </p>
+
+          <p>
+            <strong>Date :</strong>
+            ${formatDate(selectedEvent.date)}
+          </p>
+
+          <p>
+            <strong>Heure :</strong>
+            ${escapeHTML(selectedEvent.heure)}
+          </p>
+
+          <p>
+            <strong>Lieu :</strong>
+            ${escapeHTML(selectedEvent.lieu)}
+          </p>
+
+          <p>
+            <strong>Catégorie :</strong>
+            ${escapeHTML(selectedEvent.categorie)}
+          </p>
+
+          <p>
+            <strong>Prix :</strong>
+            ${prixBillet.toLocaleString("fr-FR")} HTG
+          </p>
+
+          <div class="available">
+            Billets disponibles :
+            ${billetsDisponibles.toLocaleString("fr-FR")}
+          </div>
+
+        </div>
+
+
+        <form id="buyForm">
+
+          <label for="nom">
+            Nom complet
+          </label>
+
+          <input
+            type="text"
+            id="nom"
+            placeholder="Votre nom complet"
+            required
+          >
+
+
+          <label for="telephone">
+            Téléphone
+          </label>
+
+          <input
+            type="tel"
+            id="telephone"
+            placeholder="Votre numéro de téléphone"
+            required
+          >
+
+
+          <label for="email">
+            Email
+          </label>
+
+          <input
+            type="email"
+            id="email"
+            placeholder="Votre adresse email"
+            required
+          >
+
+
+          <label for="quantite">
+            Nombre de billets
+          </label>
+
+          <select id="quantite"></select>
+
+
+          <div class="total" id="total">
+            Total :
+            ${prixBillet.toLocaleString("fr-FR")}
+            HTG
+          </div>
+
+
+          <button
+            type="submit"
+            id="continueButton"
+          >
+            Continuer
+          </button>
+
+
+          <div
+            class="error"
+            id="error"
+          ></div>
+
+
+          <div
+            class="message"
+            id="message"
+          ></div>
+
+        </form>
+
+
+        <a
+          href="/event?id=${encodeURIComponent(selectedEvent.id)}"
+          class="back"
+        >
+          ← Retour à l'événement
+        </a>
+
+      `;
+
+
+      /* =========================
+         ÉLÉMENTS DU FORMULAIRE
+      ========================= */
+
+      const form =
+        document.getElementById(
+          "buyForm"
+        );
+
+      const quantite =
+        document.getElementById(
+          "quantite"
+        );
+
+      const total =
+        document.getElementById(
+          "total"
+        );
+
+      const message =
+        document.getElementById(
+          "message"
+        );
+
+      const error =
+        document.getElementById(
+          "error"
+        );
+
+      const continueButton =
+        document.getElementById(
+          "continueButton"
+        );
+
+
+      /* =========================
+         CRÉER LES OPTIONS
+      ========================= */
+
+      const maximum =
+        Math.min(
+          billetsDisponibles,
+          5
+        );
+
+
+      if (maximum <= 0) {
+
+        const option =
+          document.createElement("option");
+
+        option.value = "0";
+        option.textContent =
+          "Aucun billet disponible";
+
+        quantite.appendChild(option);
+
+        continueButton.disabled = true;
+
+      } else {
+
+        for (
+          let i = 1;
+          i <= maximum;
+          i++
+        ) {
+
+          const option =
+            document.createElement("option");
+
+          option.value = String(i);
+
+          option.textContent =
+            i +
+            (i === 1
+              ? " billet"
+              : " billets");
+
+          quantite.appendChild(option);
+
+        }
+
+      }
+
+
+      /* =========================
+         CALCUL DU TOTAL
+      ========================= */
+
+      function updateTotal() {
+
+        const nombre =
+          Number(quantite.value) || 0;
+
+        const montant =
+          nombre * prixBillet;
+
+        total.textContent =
+          "Total : " +
+          montant.toLocaleString("fr-FR") +
+          " HTG";
+
+      }
+
+
+      quantite.addEventListener(
+        "change",
+        updateTotal
+      );
+
+
+      updateTotal();
+
+
+      /* =========================
+         ENVOI DU FORMULAIRE
+      ========================= */
+
+      form.addEventListener(
+        "submit",
+        function(event) {
+
+          event.preventDefault();
+
+
+          error.style.display = "none";
+          message.style.display = "none";
+
+
+          const nom =
+            document.getElementById(
+              "nom"
+            ).value.trim();
+
+
+          const telephone =
+            document.getElementById(
+              "telephone"
+            ).value.trim();
+
+
+          const email =
+            document.getElementById(
+              "email"
+            ).value.trim();
+
+
+          const nombre =
+            Number(quantite.value);
+
+
+          const montant =
+            nombre * prixBillet;
+
+
+          /* =========================
+             VÉRIFICATION
+          ========================= */
+
+          if (
+            !nom ||
+            !telephone ||
+            !email
+          ) {
+
+            error.textContent =
+              "Veuillez remplir tous les champs.";
+
+            error.style.display = "block";
+
+            return;
+
+          }
+
+
+          if (
+            !nombre ||
+            nombre < 1
+          ) {
+
+            error.textContent =
+              "Veuillez sélectionner au moins un billet.";
+
+            error.style.display = "block";
+
+            return;
+
+          }
+
+
+          if (
+            nombre > billetsDisponibles
+          ) {
+
+            error.textContent =
+              "Le nombre de billets demandé dépasse la quantité disponible.";
+
+            error.style.display = "block";
+
+            return;
+
+          }
+
+
+          /* =========================
+             CRÉER LA COMMANDE
+          ========================= */
+
+          const order = {
+
+            id:
+              "CMD-" +
+              Date.now(),
+
+            eventId:
+              selectedEvent.id,
+
+            eventName:
+              selectedEvent.nom,
+
+            clientName:
+              nom,
+
+            telephone:
+              telephone,
+
+            email:
+              email,
+
+            quantity:
+              nombre,
+
+            price:
+              prixBillet,
+
+            total:
+              montant,
+
+            status:
+              "En attente de paiement",
+
+            createdAt:
+              new Date().toISOString()
+
+          };
+
+
+          /* =========================
+             ENREGISTRER LA COMMANDE
+          ========================= */
+
+          const savedOrders =
+            JSON.parse(
+              localStorage.getItem(
+                "httiketOrders"
+              )
+            ) || [];
+
+
+          savedOrders.push(order);
+
+
+          localStorage.setItem(
+            "httiketOrders",
+            JSON.stringify(savedOrders)
+          );
+
+
+          /* =========================
+             AFFICHER CONFIRMATION
+          ========================= */
+
+          message.style.display =
+            "block";
+
+
+          message.innerHTML = `
+
+            <strong>
+              Demande reçue !
+            </strong>
+
+            <br><br>
+
+            Numéro de commande :
+            ${escapeHTML(order.id)}
+
+            <br>
+
+            Événement :
+            ${escapeHTML(selectedEvent.nom)}
+
+            <br>
+
+            Nom :
+            ${escapeHTML(nom)}
+
+            <br>
+
+            Téléphone :
+            ${escapeHTML(telephone)}
+
+            <br>
+
+            Email :
+            ${escapeHTML(email)}
+
+            <br>
+
+            Nombre de billets :
+            ${nombre}
+
+            <br>
+
+            Total :
+            ${montant.toLocaleString("fr-FR")}
+            HTG
+
+            <br><br>
+
+            Statut :
+            En attente de paiement
+
+            <br><br>
+
+            Nous allons vous communiquer les prochaines étapes
+            pour finaliser votre paiement.
+
+          `;
+
+
+          /* =========================
+             BLOQUER UNE DOUBLE DEMANDE
+          ========================= */
+
+          continueButton.disabled =
+            true;
+
+          continueButton.textContent =
+            "Demande enregistrée";
+
+        }
+      );
+
+    }
+
+  </script>
+
+</body>
+</html>
