@@ -1,12 +1,21 @@
 <!DOCTYPE html>
-
 <html lang="fr">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTTiket - Événement</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    HTTiket - Événement
+  </title>
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,150 +23,446 @@
       font-family: Arial, sans-serif;
     }
 
+
     body {
       background: #f5f5f5;
       color: #222;
+      min-height: 100vh;
     }
+
+
+    /* =========================
+       HEADER
+    ========================= */
 
     header {
       background: #3B1464;
       color: white;
-      padding: 18px 30px;
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow:
+        0 2px 10px rgba(0,0,0,0.15);
     }
 
+
     .logo {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: bold;
     }
 
-    .event {
-      max-width: 800px;
-      margin: 40px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
+    header a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
     }
+
+
+    /* =========================
+       CONTAINER
+    ========================= */
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+
+    /* =========================
+       EVENT CARD
+    ========================= */
+
+    .event-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow:
+        0 4px 20px rgba(0,0,0,0.08);
+    }
+
 
     .event-image {
       width: 100%;
-      height: 380px;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 25px;
-      background: #3B1464;
-    }
-
-    .event-image img {
-      width: 100%;
-      height: 100%;
+      height: 430px;
       object-fit: cover;
       display: block;
+      background: #ddd;
     }
 
-    .event h1 {
-      font-size: 35px;
-      margin-bottom: 20px;
+
+    .event-content {
+      padding: 30px;
+    }
+
+
+    .event-title {
       color: #3B1464;
+      font-size: 34px;
+      margin-bottom: 20px;
     }
 
-    .info {
+
+    .event-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
       margin-bottom: 25px;
-      line-height: 1.9;
+    }
+
+
+    .info-box {
+      background: #f7f3fa;
+      padding: 16px;
+      border-radius: 10px;
+      border-left: 4px solid #F58220;
+    }
+
+
+    .info-box strong {
+      display: block;
+      color: #3B1464;
+      margin-bottom: 5px;
+    }
+
+
+    .info-box span {
       color: #555;
     }
 
-    .description {
-      margin-bottom: 25px;
-      line-height: 1.7;
-    }
 
-    .description h2 {
+    /* =========================
+       DESCRIPTION
+    ========================= */
+
+    .description-title {
       color: #3B1464;
+      font-size: 22px;
       margin-bottom: 10px;
     }
 
-    .ticket-box {
-      border-top: 1px solid #ddd;
-      padding-top: 25px;
+
+    .description {
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 25px;
+      white-space: pre-line;
     }
 
+
+    /* =========================
+       PRICE
+    ========================= */
+
     .price {
-      font-size: 25px;
+      color: #F58220;
+      font-size: 28px;
       font-weight: bold;
-      color: #3B1464;
       margin-bottom: 20px;
     }
 
+
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+
     .btn {
       display: inline-block;
-      background: #F58220;
-      color: white;
-      padding: 14px 25px;
+      padding: 14px 22px;
       border-radius: 8px;
       text-decoration: none;
       font-weight: bold;
-    }
-
-    .back {
-      display: block;
-      margin-top: 25px;
-      color: #3B1464;
-      text-decoration: none;
-    }
-
-    .not-found {
       text-align: center;
-      padding: 50px 20px;
+      cursor: pointer;
+      border: none;
+      font-size: 16px;
     }
 
-    .not-found h1 {
+
+    .btn-buy {
+      background: #F58220;
+      color: white;
+      flex: 1;
+    }
+
+
+    .btn-back {
+      background: #3B1464;
+      color: white;
+    }
+
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+
+    /* =========================
+       ERROR
+    ========================= */
+
+    .error-box {
+      background: white;
+      border-radius: 15px;
+      padding: 40px 25px;
+      text-align: center;
+      box-shadow:
+        0 4px 20px rgba(0,0,0,0.08);
+    }
+
+
+    .error-box h1 {
       color: #3B1464;
       margin-bottom: 15px;
     }
 
-    @media (max-width: 600px) {
 
-      .event {
-        margin: 20px;
+    .error-box p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      background: #3B1464;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+      margin-top: 50px;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 700px) {
+
+      header {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+
+      .container {
+        margin-top: 25px;
+      }
+
+
+      .event-image {
+        height: 280px;
+      }
+
+
+      .event-content {
         padding: 20px;
       }
 
-      .event-image {
-        height: 250px;
+
+      .event-title {
+        font-size: 27px;
       }
 
-      .event h1 {
-        font-size: 28px;
+
+      .event-info {
+        grid-template-columns: 1fr;
       }
 
-      .price {
-        font-size: 22px;
+
+      .actions {
+        flex-direction: column;
+      }
+
+
+      .btn {
+        width: 100%;
       }
 
     }
+
   </style>
 
 </head>
 
+
 <body>
 
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
   <header>
-    <div class="logo">HTTiket</div>
+
+    <div class="logo">
+      HTTiket
+    </div>
+
+    <a href="/">
+      ← Retour à l'accueil
+    </a>
+
   </header>
 
-  <section class="event" id="eventContainer">
 
-```
-<!-- Le contenu de l'événement sera chargé automatiquement ici -->
-```
+  <!-- =========================
+       MAIN
+  ========================= -->
 
-  </section>
+  <main class="container">
+
+    <div id="eventContainer"></div>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+
+    <p>
+      © 2026 Dabenson Sainvilus — Tous droits réservés.
+    </p>
+
+    <p style="margin-top:8px;">
+      HTTiket — Billets & Événements
+    </p>
+
+  </footer>
+
 
   <script>
 
     /* =========================
-       RÉCUPÉRER L'ID
+       DEMO EVENTS
+    ========================= */
+
+    const demoEvents = {
+
+      demo1: {
+
+        id:
+          "demo1",
+
+        nom:
+          "Vamos a la piscina HTTiket",
+
+        date:
+          "2026-10-24",
+
+        heure:
+          "19h00",
+
+        lieu:
+          "Domond peligre, Haïti",
+
+        categorie:
+          "Fêtes",
+
+        prix:
+          1500,
+
+        quantite:
+          100,
+
+        description:
+          "Un grand événement HTTiket.",
+
+        image:
+          "images/cart1.png"
+
+      },
+
+
+      demo2: {
+
+        id:
+          "demo2",
+
+        nom:
+          "Événement musical",
+
+        date:
+          "",
+
+        heure:
+          "À confirmer",
+
+        lieu:
+          "Haïti",
+
+        categorie:
+          "Musique",
+
+        prix:
+          0,
+
+        quantite:
+          100,
+
+        description:
+          "Événement musical.",
+
+        image:
+          "images/cart2.jpg"
+
+      },
+
+
+      demo3: {
+
+        id:
+          "demo3",
+
+        nom:
+          "Winter Fest",
+
+        date:
+          "",
+
+        heure:
+          "À confirmer",
+
+        lieu:
+          "Lascahobas, Haïti",
+
+        categorie:
+          "Fêtes",
+
+        prix:
+          0,
+
+        quantite:
+          100,
+
+        description:
+          "Winter Fest.",
+
+        image:
+          "images/cart3.png"
+
+      }
+
+    };
+
+
+    /* =========================
+       GET EVENT ID
     ========================= */
 
     const params =
@@ -165,62 +470,13 @@
         window.location.search
       );
 
+
     const eventId =
       params.get("id");
 
 
     /* =========================
-       ÉVÉNEMENTS DÉMO
-    ========================= */
-
-    const demoEvents = [
-
-      {
-        id: "demo1",
-        nom: "Vamos a la piscina HTTiket",
-        date: "2026-10-24",
-        heure: "19h00",
-        lieu: "Domond peligre, Haïti",
-        prix: 1500,
-        quantite: 100,
-        categorie: "Fêtes",
-        description: "Un événement spécial HTTiket. Venez profiter d'une belle soirée dans une ambiance conviviale et festive.",
-        image: "images/cart1.png"
-      },
-
-
-      {
-        id: "demo2",
-        nom: "Événement musical",
-        date: "",
-        heure: "À confirmer",
-        lieu: "Haïti",
-        prix: 0,
-        quantite: 0,
-        categorie: "Musique",
-        description: "Les informations concernant cet événement musical seront disponibles prochainement.",
-        image: "images/cart2.jpg"
-      },
-
-
-      {
-        id: "demo3",
-        nom: "Winter Fest",
-        date: "",
-        heure: "À confirmer",
-        lieu: "Lascahobas, Haïti",
-        prix: 0,
-        quantite: 0,
-        categorie: "Fêtes",
-        description: "Les informations concernant le Winter Fest seront disponibles prochainement.",
-        image: "images/cart3.png"
-      }
-
-    ];
-
-
-    /* =========================
-       RÉCUPÉRER LES ÉVÉNEMENTS CRÉÉS
+       LOAD CREATED EVENTS
     ========================= */
 
     const savedEvents =
@@ -232,27 +488,37 @@
 
 
     /* =========================
-       CHERCHER L'ÉVÉNEMENT
+       COMBINE EVENTS
+    ========================= */
+
+    const allEvents = {
+      ...demoEvents
+    };
+
+
+    savedEvents.forEach(
+      function(event) {
+
+        if (
+          event &&
+          event.id
+        ) {
+
+          allEvents[event.id] =
+            event;
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+       SELECT EVENT
     ========================= */
 
     const selectedEvent =
-      savedEvents.find(
-        function(event) {
-
-          return String(event.id) ===
-                 String(eventId);
-
-        }
-      ) ||
-
-      demoEvents.find(
-        function(event) {
-
-          return String(event.id) ===
-                 String(eventId);
-
-        }
-      );
+      allEvents[eventId];
 
 
     const container =
@@ -262,175 +528,280 @@
 
 
     /* =========================
-       SÉCURITÉ HTML
-    ========================= */
-
-    function escapeHTML(text) {
-
-      return String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
-
-
-    /* =========================
        FORMAT DATE
     ========================= */
 
-    function formatDate(dateString) {
+    function formatDate(date) {
 
-      if (!dateString) {
-        return "À VENIR";
-      }
-
-      const date =
-        new Date(
-          dateString + "T00:00:00"
-        );
-
-
-      if (isNaN(date.getTime())) {
-        return dateString;
+      if (!date) {
+        return "À venir";
       }
 
 
-      return date.toLocaleDateString(
-        "fr-FR",
-        {
-          day: "2-digit",
-          month: "long",
-          year: "numeric"
-        }
+      const parts =
+        String(date).split("-");
+
+
+      if (
+        parts.length !== 3
+      ) {
+
+        return date;
+
+      }
+
+
+      return (
+        parts[2] +
+        "/" +
+        parts[1] +
+        "/" +
+        parts[0]
       );
 
     }
 
 
     /* =========================
-       AFFICHER L'ÉVÉNEMENT
+       FORMAT MONEY
     ========================= */
 
-    if (selectedEvent) {
+    function formatMoney(amount) {
 
-      document.title =
-        "HTTiket - " +
-        selectedEvent.nom;
-
-
-      container.innerHTML = `
-
-        <div class="event-image">
-
-          <img
-            src="${selectedEvent.image}"
-            alt="${escapeHTML(selectedEvent.nom)}"
-          >
-
-        </div>
+      const numericAmount =
+        Number(amount) || 0;
 
 
-        <h1>
-          ${escapeHTML(selectedEvent.nom)}
-        </h1>
+      return (
+        numericAmount
+          .toLocaleString("fr-FR") +
+        " HTG"
+      );
+
+    }
 
 
-        <div class="info">
+    /* =========================
+       ESCAPE HTML
+    ========================= */
 
-          <p>
-            <strong>Date :</strong>
-            ${formatDate(selectedEvent.date)}
-          </p>
+    function escapeHTML(text) {
 
-          <p>
-            <strong>Heure :</strong>
-            ${escapeHTML(selectedEvent.heure)}
-          </p>
+      return String(text ?? "")
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
 
-          <p>
-            <strong>Lieu :</strong>
-            ${escapeHTML(selectedEvent.lieu)}
-          </p>
-
-          <p>
-            <strong>Catégorie :</strong>
-            ${escapeHTML(selectedEvent.categorie)}
-          </p>
-
-          <p>
-            <strong>Billets disponibles :</strong>
-            ${Number(selectedEvent.quantite).toLocaleString("fr-FR")}
-          </p>
-
-        </div>
-
-
-        <div class="description">
-
-          <h2>
-            Description
-          </h2>
-
-          <p>
-            ${escapeHTML(selectedEvent.description)}
-          </p>
-
-        </div>
+    }
 
 
-        <div class="ticket-box">
+    /* =========================
+       EVENT NOT FOUND
+    ========================= */
 
-          <div class="price">
-
-            Prix :
-            ${Number(selectedEvent.prix).toLocaleString("fr-FR")}
-            HTG
-
-          </div>
-
-
-          <a
-            href="/buy?id=${encodeURIComponent(selectedEvent.id)}"
-            class="btn"
-          >
-            Acheter mon billet
-          </a>
-
-        </div>
-
-
-        <a
-          href="/"
-          class="back"
-        >
-          ← Retour à l'accueil
-        </a>
-
-      `;
-
-    } else {
+    if (!selectedEvent) {
 
       container.innerHTML = `
 
-        <div class="not-found">
+        <div class="error-box">
 
           <h1>
             Événement introuvable
           </h1>
 
           <p>
-            Cet événement n'existe pas ou n'est plus disponible.
+            Cet événement n'existe pas
+            ou n'est plus disponible.
           </p>
 
           <a
             href="/"
-            class="back"
+            class="btn btn-back"
           >
-            ← Retour à l'accueil
+            Retour à l'accueil
           </a>
+
+        </div>
+
+      `;
+
+    }
+
+
+    /* =========================
+       DISPLAY EVENT
+    ========================= */
+
+    if (selectedEvent) {
+
+      const image =
+        selectedEvent.image ||
+        "images/cart1.png";
+
+
+      const name =
+        selectedEvent.nom ||
+        "Événement";
+
+
+      const date =
+        formatDate(
+          selectedEvent.date
+        );
+
+
+      const time =
+        selectedEvent.heure ||
+        "À confirmer";
+
+
+      const location =
+        selectedEvent.lieu ||
+        "Haïti";
+
+
+      const category =
+        selectedEvent.categorie ||
+        "Autres";
+
+
+      const price =
+        Number(
+          selectedEvent.prix
+        ) || 0;
+
+
+      const description =
+        selectedEvent.description ||
+        "Aucune description disponible.";
+
+
+      container.innerHTML = `
+
+        <div class="event-card">
+
+          <img
+            src="${escapeHTML(image)}"
+            class="event-image"
+            alt="${escapeHTML(name)}"
+          >
+
+
+          <div class="event-content">
+
+            <h1 class="event-title">
+              ${escapeHTML(name)}
+            </h1>
+
+
+            <div class="event-info">
+
+              <div class="info-box">
+
+                <strong>
+                  Date
+                </strong>
+
+                <span>
+                  ${escapeHTML(date)}
+                </span>
+
+              </div>
+
+
+              <div class="info-box">
+
+                <strong>
+                  Heure
+                </strong>
+
+                <span>
+                  ${escapeHTML(time)}
+                </span>
+
+              </div>
+
+
+              <div class="info-box">
+
+                <strong>
+                  Lieu
+                </strong>
+
+                <span>
+                  ${escapeHTML(location)}
+                </span>
+
+              </div>
+
+
+              <div class="info-box">
+
+                <strong>
+                  Catégorie
+                </strong>
+
+                <span>
+                  ${escapeHTML(category)}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <h2 class="description-title">
+              Description
+            </h2>
+
+
+            <p class="description">
+              ${escapeHTML(description)}
+            </p>
+
+
+            <div class="price">
+              ${formatMoney(price)}
+            </div>
+
+
+            <div class="actions">
+
+              <a
+                href="/buy?id=${encodeURIComponent(selectedEvent.id)}"
+                class="btn btn-buy"
+              >
+                Acheter mon billet
+              </a>
+
+
+              <a
+                href="/"
+                class="btn btn-back"
+              >
+                Retour
+              </a>
+
+            </div>
+
+          </div>
 
         </div>
 
@@ -440,5 +811,7 @@
 
   </script>
 
+
 </body>
+
 </html>
