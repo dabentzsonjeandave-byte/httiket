@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -139,6 +138,14 @@
       font-weight: bold;
     }
 
+    .loading {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+      color: #3B1464;
+      font-weight: bold;
+    }
+
     .back {
       display: block;
       text-align: center;
@@ -185,19 +192,16 @@
 
   <div class="container">
 
-```
-<div class="logo">HTTiket</div>
+    <div class="logo">HTTiket</div>
 
-<h1>Acheter mon billet</h1>
+    <h1>Acheter mon billet</h1>
 
-<div id="pageContent">
-
-  <!-- Les informations de l'événement seront chargées automatiquement -->
-
-</div>
-```
+    <div id="pageContent">
+      <!-- Informations événement -->
+    </div>
 
   </div>
+
 
   <script>
 
@@ -229,7 +233,8 @@
         prix: 1500,
         quantite: 100,
         categorie: "Fêtes",
-        description: "Un événement spécial HTTiket. Venez profiter d'une belle soirée dans une ambiance conviviale et festive.",
+        description:
+          "Un événement spécial HTTiket. Venez profiter d'une belle soirée dans une ambiance conviviale et festive.",
         image: "images/cart1.png"
       },
 
@@ -242,7 +247,8 @@
         prix: 0,
         quantite: 0,
         categorie: "Musique",
-        description: "Les informations concernant cet événement musical seront disponibles prochainement.",
+        description:
+          "Les informations concernant cet événement musical seront disponibles prochainement.",
         image: "images/cart2.jpg"
       },
 
@@ -255,7 +261,8 @@
         prix: 0,
         quantite: 0,
         categorie: "Fêtes",
-        description: "Les informations concernant le Winter Fest seront disponibles prochainement.",
+        description:
+          "Les informations concernant le Winter Fest seront disponibles prochainement.",
         image: "images/cart3.png"
       }
 
@@ -354,7 +361,7 @@
 
 
     /* =========================
-       AFFICHER L'ÉVÉNEMENT
+       ÉVÉNEMENT INEXISTANT
     ========================= */
 
     if (!selectedEvent) {
@@ -383,6 +390,11 @@
       `;
 
     } else {
+
+
+      /* =========================
+         INFORMATIONS ÉVÉNEMENT
+      ========================= */
 
       document.title =
         "HTTiket - Acheter - " +
@@ -432,8 +444,10 @@
           </p>
 
           <div class="available">
+
             Billets disponibles :
             ${billetsDisponibles.toLocaleString("fr-FR")}
+
           </div>
 
         </div>
@@ -484,10 +498,15 @@
           <select id="quantite"></select>
 
 
-          <div class="total" id="total">
+          <div
+            class="total"
+            id="total"
+          >
+
             Total :
             ${prixBillet.toLocaleString("fr-FR")}
             HTG
+
           </div>
 
 
@@ -495,8 +514,20 @@
             type="submit"
             id="continueButton"
           >
-            Continuer
+            Continuer vers MonCash
           </button>
+
+
+          <div
+            class="loading"
+            id="loading"
+          >
+
+            Connexion à MonCash...
+            <br>
+            Veuillez patienter.
+
+          </div>
 
 
           <div
@@ -532,25 +563,30 @@
           "buyForm"
         );
 
+
       const quantite =
         document.getElementById(
           "quantite"
         );
+
 
       const total =
         document.getElementById(
           "total"
         );
 
+
       const message =
         document.getElementById(
           "message"
         );
 
+
       const error =
         document.getElementById(
           "error"
         );
+
 
       const continueButton =
         document.getElementById(
@@ -558,8 +594,14 @@
         );
 
 
+      const loading =
+        document.getElementById(
+          "loading"
+        );
+
+
       /* =========================
-         CRÉER LES OPTIONS
+         CRÉER OPTIONS QUANTITÉ
       ========================= */
 
       const maximum =
@@ -572,15 +614,25 @@
       if (maximum <= 0) {
 
         const option =
-          document.createElement("option");
+          document.createElement(
+            "option"
+          );
+
 
         option.value = "0";
+
+
         option.textContent =
           "Aucun billet disponible";
 
-        quantite.appendChild(option);
 
-        continueButton.disabled = true;
+        quantite.appendChild(
+          option
+        );
+
+
+        continueButton.disabled =
+          true;
 
       } else {
 
@@ -591,17 +643,27 @@
         ) {
 
           const option =
-            document.createElement("option");
+            document.createElement(
+              "option"
+            );
 
-          option.value = String(i);
+
+          option.value =
+            String(i);
+
 
           option.textContent =
             i +
-            (i === 1
-              ? " billet"
-              : " billets");
+            (
+              i === 1
+                ? " billet"
+                : " billets"
+            );
 
-          quantite.appendChild(option);
+
+          quantite.appendChild(
+            option
+          );
 
         }
 
@@ -609,16 +671,20 @@
 
 
       /* =========================
-         CALCUL DU TOTAL
+         CALCUL TOTAL
       ========================= */
 
       function updateTotal() {
 
         const nombre =
-          Number(quantite.value) || 0;
+          Number(
+            quantite.value
+          ) || 0;
+
 
         const montant =
           nombre * prixBillet;
+
 
         total.textContent =
           "Total : " +
@@ -638,19 +704,27 @@
 
 
       /* =========================
-         ENVOI DU FORMULAIRE
+         ENVOI FORMULAIRE
       ========================= */
 
       form.addEventListener(
         "submit",
-        function(event) {
+        async function(event) {
 
           event.preventDefault();
 
 
-          error.style.display = "none";
-          message.style.display = "none";
+          error.style.display =
+            "none";
 
+
+          message.style.display =
+            "none";
+
+
+          /* =========================
+             RÉCUPÉRER INFORMATIONS
+          ========================= */
 
           const nom =
             document.getElementById(
@@ -671,7 +745,9 @@
 
 
           const nombre =
-            Number(quantite.value);
+            Number(
+              quantite.value
+            );
 
 
           const montant =
@@ -679,7 +755,7 @@
 
 
           /* =========================
-             VÉRIFICATION
+             VALIDATION
           ========================= */
 
           if (
@@ -691,7 +767,10 @@
             error.textContent =
               "Veuillez remplir tous les champs.";
 
-            error.style.display = "block";
+
+            error.style.display =
+              "block";
+
 
             return;
 
@@ -706,7 +785,10 @@
             error.textContent =
               "Veuillez sélectionner au moins un billet.";
 
-            error.style.display = "block";
+
+            error.style.display =
+              "block";
+
 
             return;
 
@@ -720,7 +802,10 @@
             error.textContent =
               "Le nombre de billets demandé dépasse la quantité disponible.";
 
-            error.style.display = "block";
+
+            error.style.display =
+              "block";
+
 
             return;
 
@@ -728,14 +813,22 @@
 
 
           /* =========================
-             CRÉER LA COMMANDE
+             CRÉER NUMÉRO COMMANDE
+          ========================= */
+
+          const orderId =
+            "CMD-" +
+            Date.now();
+
+
+          /* =========================
+             CRÉER COMMANDE
           ========================= */
 
           const order = {
 
             id:
-              "CMD-" +
-              Date.now(),
+              orderId,
 
             eventId:
               selectedEvent.id,
@@ -762,7 +855,7 @@
               montant,
 
             status:
-              "En attente de paiement",
+              "Paiement en cours",
 
             createdAt:
               new Date().toISOString()
@@ -771,98 +864,160 @@
 
 
           /* =========================
-             ENREGISTRER LA COMMANDE
-          ========================= */
-
-          const savedOrders =
-            JSON.parse(
-              localStorage.getItem(
-                "httiketOrders"
-              )
-            ) || [];
-
-
-          savedOrders.push(order);
-
-
-          localStorage.setItem(
-            "httiketOrders",
-            JSON.stringify(savedOrders)
-          );
-
-
-          /* =========================
-             AFFICHER CONFIRMATION
-          ========================= */
-
-          message.style.display =
-            "block";
-
-
-          message.innerHTML = `
-
-            <strong>
-              Demande reçue !
-            </strong>
-
-            <br><br>
-
-            Numéro de commande :
-            ${escapeHTML(order.id)}
-
-            <br>
-
-            Événement :
-            ${escapeHTML(selectedEvent.nom)}
-
-            <br>
-
-            Nom :
-            ${escapeHTML(nom)}
-
-            <br>
-
-            Téléphone :
-            ${escapeHTML(telephone)}
-
-            <br>
-
-            Email :
-            ${escapeHTML(email)}
-
-            <br>
-
-            Nombre de billets :
-            ${nombre}
-
-            <br>
-
-            Total :
-            ${montant.toLocaleString("fr-FR")}
-            HTG
-
-            <br><br>
-
-            Statut :
-            En attente de paiement
-
-            <br><br>
-
-            Nous allons vous communiquer les prochaines étapes
-            pour finaliser votre paiement.
-
-          `;
-
-
-          /* =========================
-             BLOQUER UNE DOUBLE DEMANDE
+             BLOQUER BOUTON
           ========================= */
 
           continueButton.disabled =
             true;
 
+
           continueButton.textContent =
-            "Demande enregistrée";
+            "Connexion à MonCash...";
+
+
+          loading.style.display =
+            "block";
+
+
+          try {
+
+
+            /* =========================
+               APPEL SERVEUR HTTIKET
+            ========================= */
+
+            const response =
+              await fetch(
+                "/api/create-payment",
+                {
+
+                  method: "POST",
+
+                  headers: {
+                    "Content-Type":
+                      "application/json"
+                  },
+
+                  body:
+                    JSON.stringify({
+
+                      orderId:
+                        orderId,
+
+                      amount:
+                        montant
+
+                    })
+
+                }
+              );
+
+
+            /* =========================
+               LIRE RÉPONSE
+            ========================= */
+
+            const data =
+              await response.json();
+
+
+            console.log(
+              "Réponse MonCash:",
+              data
+            );
+
+
+            /* =========================
+               VÉRIFIER RÉPONSE
+            ========================= */
+
+            if (
+              !response.ok ||
+              !data.success ||
+              !data.paymentUrl
+            ) {
+
+              console.error(
+                "Erreur paiement:",
+                data
+              );
+
+
+              throw new Error(
+                data.message ||
+                "MonCash n'a pas pu créer le paiement."
+              );
+
+            }
+
+
+            /* =========================
+               SAUVEGARDER COMMANDE
+            ========================= */
+
+            const savedOrders =
+              JSON.parse(
+                localStorage.getItem(
+                  "httiketOrders"
+                )
+              ) || [];
+
+
+            savedOrders.push(
+              order
+            );
+
+
+            localStorage.setItem(
+              "httiketOrders",
+              JSON.stringify(
+                savedOrders
+              )
+            );
+
+
+            /* =========================
+               REDIRECTION MONCASH
+            ========================= */
+
+            window.location.href =
+              data.paymentUrl;
+
+
+          }
+
+          catch (err) {
+
+            console.error(
+              "Erreur paiement MonCash:",
+              err
+            );
+
+
+            loading.style.display =
+              "none";
+
+
+            continueButton.disabled =
+              false;
+
+
+            continueButton.textContent =
+              "Réessayer le paiement";
+
+
+            error.textContent =
+              "Impossible de démarrer le paiement MonCash. " +
+              (
+                err.message ||
+                "Veuillez réessayer."
+              );
+
+
+            error.style.display =
+              "block";
+
+          }
 
         }
       );
