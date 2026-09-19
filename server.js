@@ -27,170 +27,66 @@ const MONCASH_GATEWAY =
 ========================= */
 
 app.use(express.json());
-
-app.use(
-  express.urlencoded({
-    extended: true
-  })
-);
-
+app.use(express.urlencoded({ extended: true }));
 
 /*
-   Désactiver le cache pour les pages
-   afin d'éviter qu'une ancienne version
-   de buy.html soit encore affichée.
+   Fichiers HTML, CSS, images, etc.
 */
-
-app.use((req, res, next) => {
-
-  if (
-    req.path === "/" ||
-    req.path === "/buy" ||
-    req.path === "/event" ||
-    req.path === "/admin" ||
-    req.path === "/create-event" ||
-    req.path === "/shop"
-  ) {
-
-    res.setHeader(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate, proxy-revalidate"
-    );
-
-    res.setHeader(
-      "Pragma",
-      "no-cache"
-    );
-
-    res.setHeader(
-      "Expires",
-      "0"
-    );
-
-  }
-
-  next();
-
-});
-
-
-app.use(
-  express.static(__dirname)
-);
+app.use(express.static(__dirname));
 
 
 /* =========================
    PAGE ACCUEIL
 ========================= */
 
-app.get(
-  "/",
-  (req, res) => {
-
-    res.sendFile(
-      path.join(
-        __dirname,
-        "index.html"
-      )
-    );
-
-  }
-);
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
 
 /* =========================
    ADMIN
 ========================= */
 
-app.get(
-  "/admin",
-  (req, res) => {
-
-    res.sendFile(
-      path.join(
-        __dirname,
-        "admin.html"
-      )
-    );
-
-  }
-);
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "admin.html"));
+});
 
 
 /* =========================
    EVENT
 ========================= */
 
-app.get(
-  "/event",
-  (req, res) => {
-
-    res.sendFile(
-      path.join(
-        __dirname,
-        "event.html"
-      )
-    );
-
-  }
-);
+app.get("/event", (req, res) => {
+  res.sendFile(path.join(__dirname, "event.html"));
+});
 
 
 /* =========================
-   BUY
+   ACHAT BILLET
 ========================= */
 
-app.get(
-  "/buy",
-  (req, res) => {
-
-    res.sendFile(
-      path.join(
-        __dirname,
-        "buy.html"
-      )
-    );
-
-  }
-);
+app.get("/buy", (req, res) => {
+  res.sendFile(path.join(__dirname, "buy.html"));
+});
 
 
 /* =========================
-   CREATE EVENT
+   CREER UN EVENEMENT
 ========================= */
 
-app.get(
-  "/create-event",
-  (req, res) => {
-
-    res.sendFile(
-      path.join(
-        __dirname,
-        "create-event.html"
-      )
-    );
-
-  }
-);
+app.get("/create-event", (req, res) => {
+  res.sendFile(path.join(__dirname, "create-event.html"));
+});
 
 
 /* =========================
    SHOP
 ========================= */
 
-app.get(
-  "/shop",
-  (req, res) => {
-
-    res.sendFile(
-      path.join(
-        __dirname,
-        "shop.html"
-      )
-    );
-
-  }
-);
+app.get("/shop", (req, res) => {
+  res.sendFile(path.join(__dirname, "shop.html"));
+});
 
 
 /* =========================
@@ -203,31 +99,23 @@ async function getMonCashToken() {
     !MONCASH_CLIENT_ID ||
     !MONCASH_CLIENT_SECRET
   ) {
-
     throw new Error(
-      "Les identifiants MonCash ne sont pas configurés."
+      "MONCASH_CLIENT_ID ou MONCASH_CLIENT_SECRET manquant"
     );
-
   }
 
-
   const credentials =
-    Buffer
-      .from(
-        `${MONCASH_CLIENT_ID}:${MONCASH_CLIENT_SECRET}`
-      )
-      .toString("base64");
-
+    Buffer.from(
+      `${MONCASH_CLIENT_ID}:${MONCASH_CLIENT_SECRET}`
+    ).toString("base64");
 
   const response =
     await fetch(
       `${MONCASH_API}/oauth/token`,
       {
-
         method: "POST",
 
         headers: {
-
           "Authorization":
             `Basic ${credentials}`,
 
@@ -236,44 +124,20 @@ async function getMonCashToken() {
 
           "Accept":
             "application/json"
-
         },
 
         body:
           "grant_type=client_credentials&scope=read,write"
-
       }
     );
 
-
-  const responseText =
-    await response.text();
-
-
-  let data;
-
-
-  try {
-
-    data =
-      JSON.parse(
-        responseText
-      );
-
-  } catch {
-
-    data = {
-      raw: responseText
-    };
-
-  }
-
+  const data =
+    await response.json();
 
   console.log(
     "MonCash OAuth status:",
     response.status
   );
-
 
   if (!response.ok) {
 
@@ -283,33 +147,16 @@ async function getMonCashToken() {
     );
 
     throw new Error(
-      "Impossible d'obtenir le token MonCash."
+      "Impossible d'obtenir le token MonCash"
     );
-
   }
-
-
-  if (!data.access_token) {
-
-    console.error(
-      "Token MonCash absent:",
-      data
-    );
-
-    throw new Error(
-      "MonCash n'a pas retourné de token."
-    );
-
-  }
-
 
   return data.access_token;
-
 }
 
 
 /* =========================
-   CREATE MONCASH PAYMENT
+   MONCASH CREATE PAYMENT
 ========================= */
 
 app.post(
@@ -325,26 +172,17 @@ app.post(
 
 
       /* =========================
-         VALIDATION ORDER ID
+         VALIDATION
       ========================= */
 
       if (!orderId) {
 
         return res.status(400).json({
-
           success: false,
-
-          message:
-            "orderId requis."
-
+          message: "orderId requis"
         });
-
       }
 
-
-      /* =========================
-         VALIDATION MONTANT
-      ========================= */
 
       const numericAmount =
         Number(amount);
@@ -356,19 +194,14 @@ app.post(
       ) {
 
         return res.status(400).json({
-
           success: false,
-
-          message:
-            "Montant invalide."
-
+          message: "Montant invalide"
         });
-
       }
 
 
       /* =========================
-         MONCASH TOKEN
+         TOKEN MONCASH
       ========================= */
 
       const accessToken =
@@ -414,27 +247,8 @@ app.post(
         );
 
 
-      const responseText =
-        await paymentResponse.text();
-
-
-      let paymentData;
-
-
-      try {
-
-        paymentData =
-          JSON.parse(
-            responseText
-          );
-
-      } catch {
-
-        paymentData = {
-          raw: responseText
-        };
-
-      }
+      const paymentData =
+        await paymentResponse.json();
 
 
       console.log(
@@ -449,10 +263,6 @@ app.post(
       );
 
 
-      /* =========================
-         MONCASH ERROR
-      ========================= */
-
       if (!paymentResponse.ok) {
 
         return res.status(
@@ -462,13 +272,12 @@ app.post(
           success: false,
 
           message:
-            "MonCash a refusé la création du paiement.",
+            "MonCash a refusé la création du paiement",
 
           details:
             paymentData
 
         });
-
       }
 
 
@@ -477,9 +286,7 @@ app.post(
       ========================= */
 
       const paymentToken =
-        paymentData
-          ?.payment_token
-          ?.token;
+        paymentData?.payment_token?.token;
 
 
       if (!paymentToken) {
@@ -489,34 +296,26 @@ app.post(
           success: false,
 
           message:
-            "MonCash n'a pas retourné de payment token.",
+            "MonCash n'a pas retourné de payment token",
 
           details:
             paymentData
 
         });
-
       }
 
 
       /* =========================
-         PAYMENT URL
+         URL MONCASH
       ========================= */
 
       const paymentUrl =
-        `${MONCASH_GATEWAY}/Payment/Redirect?token=${encodeURIComponent(
-          paymentToken
-        )}`;
+        `${MONCASH_GATEWAY}/Payment/Redirect?token=${encodeURIComponent(paymentToken)}`;
 
-
-      /* =========================
-         SUCCESS
-      ========================= */
 
       return res.status(200).json({
 
-        success:
-          true,
+        success: true,
 
         orderId:
           String(orderId),
@@ -524,13 +323,15 @@ app.post(
         amount:
           numericAmount,
 
+        paymentToken:
+          paymentToken,
+
         paymentUrl:
           paymentUrl
 
       });
 
     }
-
 
     catch (error) {
 
@@ -542,11 +343,10 @@ app.post(
 
       return res.status(500).json({
 
-        success:
-          false,
+        success: false,
 
         message:
-          "Erreur lors de la connexion à MonCash.",
+          "Erreur lors de la connexion à MonCash",
 
         error:
           error.message
@@ -568,7 +368,11 @@ app.all(
   (req, res) => {
 
     console.log(
-      "========== MONCASH RETURN =========="
+      "================================="
+    );
+
+    console.log(
+      "MONCASH RETURN"
     );
 
     console.log(
@@ -581,155 +385,26 @@ app.all(
       req.body
     );
 
-
-    res
-      .status(200)
-      .send(`
-
-<!DOCTYPE html>
-
-<html lang="fr">
-
-<head>
-
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    HTTiket - Retour MonCash
-  </title>
-
-  <style>
-
-    body {
-
-      font-family:
-        Arial,
-        sans-serif;
-
-      background:
-        #f5f5f5;
-
-      text-align:
-        center;
-
-      padding:
-        60px 20px;
-
-    }
+    console.log(
+      "================================="
+    );
 
 
-    .box {
+    res.status(200).send(`
+      <h1>Retour MonCash</h1>
 
-      max-width:
-        500px;
+      <p>
+        Votre transaction a été reçue.
+      </p>
 
-      margin:
-        auto;
+      <p>
+        HTTiket vérifie actuellement le paiement.
+      </p>
 
-      background:
-        white;
-
-      padding:
-        35px;
-
-      border-radius:
-        15px;
-
-      box-shadow:
-        0 4px 20px
-        rgba(0,0,0,0.10);
-
-    }
-
-
-    h1 {
-
-      color:
-        #3B1464;
-
-      margin-bottom:
-        15px;
-
-    }
-
-
-    p {
-
-      color:
-        #555;
-
-      line-height:
-        1.6;
-
-    }
-
-
-    a {
-
-      display:
-        inline-block;
-
-      margin-top:
-        20px;
-
-      padding:
-        12px 20px;
-
-      background:
-        #F58220;
-
-      color:
-        white;
-
-      text-decoration:
-        none;
-
-      border-radius:
-        7px;
-
-      font-weight:
-        bold;
-
-    }
-
-  </style>
-
-</head>
-
-
-<body>
-
-  <div class="box">
-
-    <h1>
-      Retour MonCash
-    </h1>
-
-    <p>
-      Votre transaction a été reçue.
-    </p>
-
-    <p>
-      HTTiket vérifie actuellement le paiement.
-    </p>
-
-    <a href="/">
-      Retour à l'accueil
-    </a>
-
-  </div>
-
-</body>
-
-</html>
-
-      `);
-
+      <p>
+        <a href="/">Retour à l'accueil</a>
+      </p>
+    `);
   }
 );
 
@@ -743,7 +418,11 @@ app.all(
   (req, res) => {
 
     console.log(
-      "========== MONCASH ALERT =========="
+      "================================="
+    );
+
+    console.log(
+      "MONCASH ALERT"
     );
 
     console.log(
@@ -756,155 +435,26 @@ app.all(
       req.body
     );
 
-
-    res
-      .status(200)
-      .send(`
-
-<!DOCTYPE html>
-
-<html lang="fr">
-
-<head>
-
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    HTTiket - Paiement
-  </title>
-
-  <style>
-
-    body {
-
-      font-family:
-        Arial,
-        sans-serif;
-
-      background:
-        #f5f5f5;
-
-      text-align:
-        center;
-
-      padding:
-        60px 20px;
-
-    }
+    console.log(
+      "================================="
+    );
 
 
-    .box {
+    res.status(200).send(`
+      <h1>Merci pour votre paiement</h1>
 
-      max-width:
-        500px;
+      <p>
+        Votre demande de paiement a été reçue.
+      </p>
 
-      margin:
-        auto;
+      <p>
+        HTTiket va vérifier la transaction.
+      </p>
 
-      background:
-        white;
-
-      padding:
-        35px;
-
-      border-radius:
-        15px;
-
-      box-shadow:
-        0 4px 20px
-        rgba(0,0,0,0.10);
-
-    }
-
-
-    h1 {
-
-      color:
-        #3B1464;
-
-      margin-bottom:
-        15px;
-
-    }
-
-
-    p {
-
-      color:
-        #555;
-
-      line-height:
-        1.6;
-
-    }
-
-
-    a {
-
-      display:
-        inline-block;
-
-      margin-top:
-        20px;
-
-      padding:
-        12px 20px;
-
-      background:
-        #F58220;
-
-      color:
-        white;
-
-      text-decoration:
-        none;
-
-      border-radius:
-        7px;
-
-      font-weight:
-        bold;
-
-    }
-
-  </style>
-
-</head>
-
-
-<body>
-
-  <div class="box">
-
-    <h1>
-      Paiement reçu
-    </h1>
-
-    <p>
-      Votre demande de paiement a été reçue.
-    </p>
-
-    <p>
-      HTTiket va vérifier la transaction.
-    </p>
-
-    <a href="/">
-      Retour à l'accueil
-    </a>
-
-  </div>
-
-</body>
-
-</html>
-
-      `);
-
+      <p>
+        <a href="/">Retour à l'accueil</a>
+      </p>
+    `);
   }
 );
 
@@ -919,8 +469,7 @@ app.get(
 
     res.status(200).json({
 
-      success:
-        true,
+      success: true,
 
       message:
         "HTTiket fonctionne correctement",
@@ -947,21 +496,16 @@ app.get(
 
     res.status(200).json({
 
-      success:
-        true,
+      success: true,
 
       moncash:
         "Sandbox",
 
       clientIdConfigured:
-        Boolean(
-          MONCASH_CLIENT_ID
-        ),
+        Boolean(MONCASH_CLIENT_ID),
 
       clientSecretConfigured:
-        Boolean(
-          MONCASH_CLIENT_SECRET
-        )
+        Boolean(MONCASH_CLIENT_SECRET)
 
     });
 
@@ -970,7 +514,7 @@ app.get(
 
 
 /* =========================
-   START SERVER
+   DEMARRER LE SERVEUR
 ========================= */
 
 app.listen(
